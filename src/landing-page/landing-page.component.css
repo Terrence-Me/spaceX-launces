@@ -1,0 +1,29 @@
+.landing-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+mat-card {
+  width: 50%;
+  height: 30%;
+  /* background-color: #f0f0f0; */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  gap: 2rem;
+
+  .mat-mdc-card-header {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .mat-mdc-card-title {
+    font-size: 2rem;
+  }
+
+  .mat-mdc-card-content {
+    font-size: 1rem;
+    height: 50%;
+  }
+}
