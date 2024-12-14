@@ -1,0 +1,16 @@
+.list-view-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.mat-mdc-card {
+  display: flex;
+  width: 50%;
+  height: 30%;
+  /* background-color: #f0f0f0; */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  gap: 2rem;
+}
