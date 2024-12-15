@@ -9,5 +9,7 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumnKeys"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumnKeys;"></tr>
         </table>
+
+        <mat-paginator [length]="totalLaunches" [pageSize]="pageSize" (page)="handlePageEvent($event)"></mat-paginator>
     </mat-card>
 </div>
