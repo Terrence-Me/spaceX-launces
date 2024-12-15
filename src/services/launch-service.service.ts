@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LaunchServiceResponse } from './launch-service-model';
+import { map, pluck } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -10,25 +11,34 @@ export class LaunchServiceService {
 
   constructor(private _http: HttpClient) {}
 
-  requestBody = {
-    query: {},
-    options: {
-      pagination: true,
-      select: [
-        'flight_number',
-        'name',
-        'details',
-        'date_utc',
-        'rocket',
-        'links',
-      ],
-    },
-  };
+  getLaunches(page = 2, limit = 10) {
+    const requestBody = {
+      query: {},
+      options: {
+        select: [
+          'flight_number',
+          'name',
+          'details',
+          'date_utc',
+          'rocket',
+          'links',
+        ],
+        pagination: true,
+        page,
+        limit,
+      },
+    };
 
-  getLaunches() {
-    return this._http.post<LaunchServiceResponse>(
-      this.apiUrl,
-      this.requestBody
+    return this._http.post<any>(this.apiUrl, requestBody).pipe(
+      map((response) => ({
+        launches: response.docs.map((launch: any) => ({
+          flichtNumber: launch.flight_number,
+          launchYear: new Date(launch.date_utc).getFullYear(),
+          rocketName: launch.name,
+          details: launch.details,
+        })),
+        total: response.totalPages,
+      }))
     );
   }
 }
