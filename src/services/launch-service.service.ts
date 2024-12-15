@@ -32,7 +32,7 @@ export class LaunchServiceService {
     return this._http.post<any>(this.apiUrl, requestBody).pipe(
       map((response) => ({
         launches: response.docs.map((launch: any) => ({
-          flichtNumber: launch.flight_number,
+          flightNumber: launch.flight_number,
           launchYear: new Date(launch.date_utc).getFullYear(),
           rocketName: launch.name,
           details: launch.details,

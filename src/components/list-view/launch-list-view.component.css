@@ -8,9 +8,10 @@
 .mat-mdc-card {
   display: flex;
   width: 50%;
-  height: 30%;
+  /* height: 30%; */
   /* background-color: #f0f0f0; */
   border: 1px solid #ccc;
   border-radius: 8px;
   gap: 2rem;
+  padding: 1rem;
 }
