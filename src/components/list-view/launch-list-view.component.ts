@@ -9,11 +9,18 @@ import {
   MatPaginatorModule,
   PageEvent,
 } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-list-view',
   standalone: true,
-  imports: [MatCardModule, MatTableModule, CommonModule, MatPaginatorModule],
+  imports: [
+    MatCardModule,
+    MatTableModule,
+    CommonModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './launch-list-view.component.html',
   styleUrl: './launch-list-view.component.css',
 })
@@ -26,6 +33,7 @@ export class LaunchListViewComponent implements OnInit {
   ];
   displayedColumnKeys = this.displayColumns.map((c) => c.key);
   dataSource = new MatTableDataSource<any>([]);
+  isLoading = true;
   // vm$: any;
 
   currentPage = 1;
@@ -49,9 +57,11 @@ export class LaunchListViewComponent implements OnInit {
   }
 
   loadLaunches(page: number, pageSize: number) {
+    this.isLoading = true;
     this._launchService.getLaunches(page, pageSize).subscribe((data) => {
       this.dataSource = data.launches;
       this.totalLaunches = data.total;
+      this.isLoading = false;
     });
   }
 

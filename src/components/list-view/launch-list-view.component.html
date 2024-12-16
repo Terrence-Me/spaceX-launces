@@ -1,5 +1,5 @@
 <div class="list-view-container">
-    <mat-card>
+    <mat-card *ngIf="!isLoading">
         <table mat-table [dataSource]="dataSource">
             <ng-container *ngFor="let column of displayColumns" [matColumnDef]="column.key">
                 <th mat-header-cell *matHeaderCellDef> {{ column.header }} </th>
@@ -12,4 +12,6 @@
 
         <mat-paginator [length]="totalLaunches" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
     </mat-card>
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+
 </div>
