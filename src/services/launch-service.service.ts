@@ -11,7 +11,7 @@ export class LaunchServiceService {
 
   constructor(private _http: HttpClient) {}
 
-  getLaunches(page = 2, limit = 10) {
+  getLaunches(page: number, limit: number) {
     const requestBody = {
       query: {},
       options: {
@@ -35,7 +35,7 @@ export class LaunchServiceService {
           flightNumber: launch.flight_number,
           launchYear: new Date(launch.date_utc).getFullYear(),
           rocketName: launch.name,
-          details: launch.details,
+          details: launch.details ? launch.details : 'No details available',
         })),
         total: response.totalPages,
       }))

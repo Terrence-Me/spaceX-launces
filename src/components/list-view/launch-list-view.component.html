@@ -10,6 +10,6 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumnKeys;"></tr>
         </table>
 
-        <mat-paginator [length]="totalLaunches" [pageSize]="pageSize" (page)="handlePageEvent($event)"></mat-paginator>
+        <mat-paginator [length]="totalLaunches" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
     </mat-card>
 </div>

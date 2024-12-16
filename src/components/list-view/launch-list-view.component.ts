@@ -1,10 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { LaunchServiceService } from '../../services/launch-service.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import {
+  MatPaginator,
+  MatPaginatorModule,
+  PageEvent,
+} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-list-view',
@@ -22,37 +26,38 @@ export class LaunchListViewComponent implements OnInit {
   ];
   displayedColumnKeys = this.displayColumns.map((c) => c.key);
   dataSource = new MatTableDataSource<any>([]);
-  vm$: any;
+  // vm$: any;
 
   currentPage = 1;
   pageSize = 10;
   totalLaunches = 0;
 
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   constructor(private _launchService: LaunchServiceService) {}
 
   ngOnInit(): void {
-    // this.vm$ = this._launchService
-    //   .getLaunches(this.currentPage, this.pageSize)
-    //   .subscribe((data) => {
-    //     console.log(data);
-    //     this.dataSource = new MatTableDataSource<any>(data.launches);
-    //     this.totalLaunches = data.total;
-    //   });
     this.loadLaunches(this.currentPage, this.pageSize);
+  }
+
+  ngAfterViewInit(): void {
+    this.paginator.page.subscribe((event: PageEvent) => {
+      this.currentPage = event.pageIndex + 1;
+      this.pageSize = event.pageSize;
+      this.loadLaunches(this.currentPage, this.pageSize);
+    });
   }
 
   loadLaunches(page: number, pageSize: number) {
-    this.vm$ = this._launchService
-      .getLaunches(page, pageSize)
-      .subscribe((data) => {
-        this.dataSource = new MatTableDataSource<any>(data.launches);
-        this.totalLaunches = data.total;
-      });
+    this._launchService.getLaunches(page, pageSize).subscribe((data) => {
+      this.dataSource = data.launches;
+      this.totalLaunches = data.total;
+    });
   }
 
-  handlePageEvent(event: PageEvent) {
-    this.currentPage = event.pageIndex + 1;
-    this.pageSize = event.pageSize;
-    this.loadLaunches(this.currentPage, this.pageSize);
-  }
+  // handlePageEvent(event: PageEvent) {
+  //   this.currentPage = event.pageIndex + 1;
+  //   this.pageSize = event.pageSize;
+  //   this.loadLaunches(this.currentPage, this.pageSize);
+  // }
 }
