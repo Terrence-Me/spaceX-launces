@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LaunchServiceResponse } from './launch-service-model';
+import { LaunchServiceApiResponse } from './launch-service-model';
 import { map, pluck } from 'rxjs';
 
 @Injectable({
@@ -29,16 +29,24 @@ export class LaunchServiceService {
       },
     };
 
-    return this._http.post<any>(this.apiUrl, requestBody).pipe(
-      map((response) => ({
-        launches: response.docs.map((launch: any) => ({
-          flightNumber: launch.flight_number,
-          launchYear: new Date(launch.date_utc).getFullYear(),
-          rocketName: launch.name,
-          details: launch.details ? launch.details : 'No details available',
-        })),
-        total: response.totalPages,
-      }))
-    );
+    return this._http
+      .post<LaunchServiceApiResponse>(this.apiUrl, requestBody)
+      .pipe(
+        map((response) => ({
+          launches: response.docs.map((launch: any) => ({
+            flightNumber: launch.flight_number,
+            launchYear: new Date(launch.date_utc).getFullYear(),
+            rocketName: launch.name,
+            details: launch.details ? launch.details : 'No details available',
+            mediaLinks: {
+              presskit: launch.links.presskit ? launch.links.presskit : null,
+              webcast: launch.links.webcast ? launch.links.webcast : null,
+              article: launch.links.article ? launch.links.article : null,
+              wikipedia: launch.links.wikipedia ? launch.links.wikipedia : null,
+            },
+          })),
+          total: response.totalDocs,
+        }))
+      );
   }
 }
