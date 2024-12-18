@@ -1,23 +1,34 @@
-export interface LaunchServiceResponse {
+export interface LaunchServiceApiResponse {
   docs: LaunchDoc[];
-  pagination: launchPagination;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+  limit: number;
+  nextPage: number | null;
+  offset: number;
+  page: number;
+  pagingCounter: number;
+  prevPage: number | null;
+  totalDocs: number;
+  totalPages: number;
 }
 
-export interface Links {
-  patch: {
-    small: string | null;
-    large: string | null;
-  };
-  reddit: {
-    campaign: string | null;
-    launch: string | null;
-    media: string | null;
-    recovery: string | null;
-  };
-  flickr: {
-    small: string[];
-    original: string[];
-  };
+export interface GetLaunchesResponse {
+  launches: {
+    flightNumber: number;
+    launchYear: number;
+    rocketName: string;
+    details: string;
+    mediaLinks: {
+      presskit: string | null;
+      webcast: string | null;
+      article: string | null;
+      wikipedia: string | null;
+    };
+  }[];
+  total: number;
+}
+
+interface Links {
   presskit: string | null;
   webcast: string | null;
   youtube_id: string | null;
@@ -33,17 +44,4 @@ interface LaunchDoc {
   name: string;
   date_utc: string;
   id: string;
-}
-
-interface launchPagination {
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
-  limit: number;
-  nextPage: number | null;
-  offset: number;
-  page: number;
-  pagingCounter: number;
-  prevPage: number | null;
-  totalDocs: number;
-  totalPages: number;
 }

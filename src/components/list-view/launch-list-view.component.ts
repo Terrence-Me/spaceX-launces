@@ -70,20 +70,32 @@ export class LaunchListViewComponent implements OnInit {
 
     if (this.sort) {
       this.sort.sortChange.subscribe((sort: Sort) => {
-        this.dataSource.sort = this.sort;
+        this.loadLaunches(
+          this.currentPage,
+          this.pageSize,
+          sort.active,
+          sort.direction
+        );
       });
     } else {
       return;
     }
   }
 
-  loadLaunches(page: number, pageSize: number) {
+  loadLaunches(
+    page: number,
+    pageSize: number,
+    sortField?: string,
+    sortOrder?: string
+  ) {
     this.isLoading = true;
-    this._launchService.getLaunches(page, pageSize).subscribe((data) => {
-      console.log('Launches Data:', data.launches); // Confirm correct structure
-      this.dataSource = new MatTableDataSource(data.launches); // Direct assignment
-      this.totalLaunches = data.total;
-      this.isLoading = false;
-    });
+    this._launchService
+      .getLaunches(page, pageSize, sortField, sortOrder)
+      .subscribe((data) => {
+        console.log('Launches Data:', data.launches);
+        this.dataSource = new MatTableDataSource(data.launches);
+        this.totalLaunches = data.total;
+        this.isLoading = false;
+      });
   }
 }

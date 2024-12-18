@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LaunchServiceApiResponse } from './launch-service-model';
-import { map, pluck } from 'rxjs';
+import {
+  LaunchServiceApiResponse,
+  GetLaunchesResponse,
+} from './launch-service-model';
+import { map, Observable, pluck } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +14,16 @@ export class LaunchServiceService {
 
   constructor(private _http: HttpClient) {}
 
-  getLaunches(page: number, limit: number) {
+  getLaunches(
+    page: number,
+    limit: number,
+    sortField?: string,
+    sortOrder?: string
+  ): Observable<GetLaunchesResponse> {
+    console.log('sortField:', sortField, 'sortOrder', sortOrder);
+    const mappedSortField = sortField
+      ? this.sortFieldMapping[sortField]
+      : undefined;
     const requestBody = {
       query: {},
       options: {
@@ -26,6 +38,9 @@ export class LaunchServiceService {
         pagination: true,
         page,
         limit,
+        sort: mappedSortField
+          ? { [mappedSortField]: sortOrder === 'asc' ? 1 : -1 }
+          : undefined,
       },
     };
 
@@ -49,4 +64,11 @@ export class LaunchServiceService {
         }))
       );
   }
+
+  private sortFieldMapping: { [key: string]: string } = {
+    flightNumber: 'flight_number',
+    launchYear: 'date_utc',
+    rocketName: 'name',
+    details: 'details',
+  };
 }
