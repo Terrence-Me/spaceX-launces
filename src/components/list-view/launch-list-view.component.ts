@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { LaunchServiceService } from '../../services/launch-service.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import {
@@ -17,6 +18,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   imports: [
     MatCardModule,
     MatTableModule,
+    MatSortModule,
     CommonModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
@@ -34,13 +36,14 @@ export class LaunchListViewComponent implements OnInit {
   displayedColumnKeys = this.displayColumns.map((c) => c.key);
   dataSource = new MatTableDataSource<any>([]);
   isLoading = true;
-  // vm$: any;
+  expandedElement: any | null = null;
 
   currentPage = 1;
   pageSize = 10;
   totalLaunches = 0;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private _launchService: LaunchServiceService) {}
 
@@ -48,26 +51,39 @@ export class LaunchListViewComponent implements OnInit {
     this.loadLaunches(this.currentPage, this.pageSize);
   }
 
+  handleRowExpand(row: any) {
+    console.log(row);
+    this.expandedElement = this.expandedElement === row ? null : row;
+    console.log(this.expandedElement);
+  }
+
   ngAfterViewInit(): void {
-    this.paginator.page.subscribe((event: PageEvent) => {
-      this.currentPage = event.pageIndex + 1;
-      this.pageSize = event.pageSize;
-      this.loadLaunches(this.currentPage, this.pageSize);
-    });
+    if (this.paginator) {
+      this.paginator.page.subscribe((event: PageEvent) => {
+        this.currentPage = event.pageIndex + 1;
+        this.pageSize = event.pageSize;
+        this.loadLaunches(this.currentPage, this.pageSize);
+      });
+    } else {
+      return;
+    }
+
+    if (this.sort) {
+      this.sort.sortChange.subscribe((sort: Sort) => {
+        this.dataSource.sort = this.sort;
+      });
+    } else {
+      return;
+    }
   }
 
   loadLaunches(page: number, pageSize: number) {
     this.isLoading = true;
     this._launchService.getLaunches(page, pageSize).subscribe((data) => {
-      this.dataSource = data.launches;
+      console.log('Launches Data:', data.launches); // Confirm correct structure
+      this.dataSource = new MatTableDataSource(data.launches); // Direct assignment
       this.totalLaunches = data.total;
       this.isLoading = false;
     });
   }
-
-  // handlePageEvent(event: PageEvent) {
-  //   this.currentPage = event.pageIndex + 1;
-  //   this.pageSize = event.pageSize;
-  //   this.loadLaunches(this.currentPage, this.pageSize);
-  // }
 }
