@@ -4,7 +4,7 @@ import { LaunchServiceService } from '../../services/launch-service.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs';
+import { LoadingService } from '../loading/loading.service';
 import {
   MatPaginator,
   MatPaginatorModule,
@@ -35,7 +35,6 @@ export class LaunchListViewComponent implements OnInit {
   ];
   displayedColumnKeys = this.displayColumns.map((c) => c.key);
   dataSource = new MatTableDataSource<any>([]);
-  isLoading = true;
   expandedElement: any | null = null;
 
   currentPage = 1;
@@ -45,7 +44,10 @@ export class LaunchListViewComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private _launchService: LaunchServiceService) {}
+  constructor(
+    private _launchService: LaunchServiceService,
+    private _loadingService: LoadingService
+  ) {}
 
   ngOnInit(): void {
     this.loadLaunches(this.currentPage, this.pageSize);
@@ -88,14 +90,14 @@ export class LaunchListViewComponent implements OnInit {
     sortField?: string,
     sortOrder?: string
   ) {
-    this.isLoading = true;
+    this._loadingService.loadingOn();
     this._launchService
       .getLaunches(page, pageSize, sortField, sortOrder)
       .subscribe((data) => {
         console.log('Launches Data:', data.launches);
         this.dataSource = new MatTableDataSource(data.launches);
         this.totalLaunches = data.total;
-        this.isLoading = false;
+        this._loadingService.loadingOff();
       });
   }
 }
