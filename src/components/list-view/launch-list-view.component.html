@@ -10,8 +10,8 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumnKeys"></tr>
 
                 <ng-container *matRowDef="let row; columns: displayedColumnKeys;">
-                    <!-- Main Row -->
-                    <tr mat-row (click)="handleRowExpand(row)">
+
+                    <tr mat-row (click)="handleRowExpand(row)" class="main-row">
                         <td *ngFor="let column of displayedColumnKeys">
                             {{ row[column] }}
                         </td>
@@ -21,16 +21,16 @@
                             <div class="expanded-content">
                                 <ul>
                                     <li *ngIf="row.mediaLinks?.presskit">
-                                        <a [href]="row.mediaLinks.presskit" target="_blank">Presskit</a>
+                                        <a [href]="row.mediaLinks.presskit" target="_blank"> Navigate to Presskit</a>
                                     </li>
                                     <li *ngIf="row.mediaLinks?.webcast">
-                                        <a [href]="row.mediaLinks.webcast" target="_blank">Webcast</a>
+                                        <a [href]="row.mediaLinks.webcast" target="_blank"> Navigate to Webcast</a>
                                     </li>
                                     <li *ngIf="row.mediaLinks?.article">
-                                        <a [href]="row.mediaLinks.article" target="_blank">Article</a>
+                                        <a [href]="row.mediaLinks.article" target="_blank"> Navigate to Article</a>
                                     </li>
                                     <li *ngIf="row.mediaLinks?.wikipedia">
-                                        <a [href]="row.mediaLinks.wikipedia" target="_blank">Wikipedia</a>
+                                        <a [href]="row.mediaLinks.wikipedia" target="_blank"> Navigate to Wikipedia</a>
                                     </li>
                                 </ul>
                             </div>
