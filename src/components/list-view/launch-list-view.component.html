@@ -19,18 +19,19 @@
                     <tr *ngIf="expandedElement === row" class="expanded-row">
                         <td [attr.colspan]="displayedColumnKeys.length">
                             <div class="expanded-content">
+                                <h3>Media Links</h3>
                                 <ul>
                                     <li *ngIf="row.mediaLinks?.presskit">
-                                        <a [href]="row.mediaLinks.presskit" target="_blank"> Navigate to Presskit</a>
+                                        <a [href]="row.mediaLinks.presskit" target="_blank">Presskit</a>
                                     </li>
                                     <li *ngIf="row.mediaLinks?.webcast">
-                                        <a [href]="row.mediaLinks.webcast" target="_blank"> Navigate to Webcast</a>
+                                        <a [href]="row.mediaLinks.webcast" target="_blank">Webcast</a>
                                     </li>
                                     <li *ngIf="row.mediaLinks?.article">
-                                        <a [href]="row.mediaLinks.article" target="_blank"> Navigate to Article</a>
+                                        <a [href]="row.mediaLinks.article" target="_blank">Article</a>
                                     </li>
                                     <li *ngIf="row.mediaLinks?.wikipedia">
-                                        <a [href]="row.mediaLinks.wikipedia" target="_blank"> Navigate to Wikipedia</a>
+                                        <a [href]="row.mediaLinks.wikipedia" target="_blank">Wikipedia</a>
                                     </li>
                                 </ul>
                             </div>
