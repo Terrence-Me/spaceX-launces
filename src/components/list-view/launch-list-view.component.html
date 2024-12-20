@@ -1,7 +1,8 @@
 <div class="list-view-container">
-    <mat-card>
+    <mat-card class="mat-elevation-z8">
         <div class="table-container">
-            <table mat-table [dataSource]="dataSource" matSort>
+            <table mat-table [dataSource]="dataSource" matSort aria-label="SpaceX Launch List"
+                (matSortChange)="announceSortChange($event)">
                 <ng-container *ngFor="let column of displayColumns" [matColumnDef]="column.key">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ column.header }} </th>
                     <td mat-cell *matCellDef="let row"> {{ row[column.key] }} </td>
@@ -11,14 +12,16 @@
 
                 <ng-container *matRowDef="let row; columns: displayedColumnKeys;">
 
-                    <tr mat-row (click)="handleRowExpand(row)" class="main-row">
+                    <tr mat-row (click)="handleRowExpand(row)" (keydown)="onKeydown($event, row)" class="main-row"
+                        aria-label="expand row" role="button" tabindex="0"
+                        [attr.aria-expanded]="expandedElement === row">
                         <td *ngFor="let column of displayedColumnKeys">
                             {{ row[column] }}
                         </td>
                     </tr>
                     <tr *ngIf="expandedElement === row" class="expanded-row">
                         <td [attr.colspan]="displayedColumnKeys.length">
-                            <div class="expanded-content">
+                            <div>
                                 <h3>Media Links</h3>
                                 <ul>
                                     <li *ngIf="row.mediaLinks?.presskit">
@@ -42,7 +45,7 @@
             </table>
         </div>
         <mat-paginator [length]="totalLaunches" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
-            showFirstLastButtons aria-label="Select page of SpaceX launch list">
+            showFirstLastButtons>
         </mat-paginator>
     </mat-card>
 

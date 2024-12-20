@@ -11,6 +11,7 @@ import {
   PageEvent,
 } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-list-view',
@@ -46,7 +47,8 @@ export class LaunchListViewComponent implements OnInit {
 
   constructor(
     private _launchService: LaunchServiceService,
-    private _loadingService: LoadingService
+    private _loadingService: LoadingService,
+    private _liveAnnouncer: LiveAnnouncer
   ) {}
 
   ngOnInit(): void {
@@ -54,7 +56,6 @@ export class LaunchListViewComponent implements OnInit {
   }
 
   handleRowExpand(row: any) {
-    console.log(row);
     this.expandedElement = this.expandedElement === row ? null : row;
     console.log(this.expandedElement);
   }
@@ -99,5 +100,21 @@ export class LaunchListViewComponent implements OnInit {
         this.totalLaunches = data.total;
         this._loadingService.loadingOff();
       });
+  }
+
+  onKeydown(event: KeyboardEvent, row: any) {
+    const validKeys = ['Enter', ' '];
+    if (validKeys.includes(event.key)) {
+      event.preventDefault();
+      this.handleRowExpand(row);
+    }
+  }
+
+  announceSortChange(sortState: Sort) {
+    if (sortState.direction) {
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+      this._liveAnnouncer.announce('Sorting cleared');
+    }
   }
 }

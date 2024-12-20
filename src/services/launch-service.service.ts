@@ -20,7 +20,6 @@ export class LaunchServiceService {
     sortField?: string,
     sortOrder?: string
   ): Observable<GetLaunchesResponse> {
-    console.log('sortField:', sortField, 'sortOrder', sortOrder);
     const mappedSortField = sortField
       ? this.sortFieldMapping[sortField]
       : undefined;
@@ -70,5 +69,5 @@ export class LaunchServiceService {
     launchYear: 'date_utc',
     rocketName: 'name',
     details: 'details',
-  };
+  } as const;
 }
